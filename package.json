@@ -2,9 +2,9 @@
   "name": "react-proyect-config-cli",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
   "bin": {
-    "react-proyect-config-cli": "src/index.ts"
+    "react-proyect-config-cli": "dist/index.js"
   },
   "scripts": {
     "start": "ts-node dist/index.js",
