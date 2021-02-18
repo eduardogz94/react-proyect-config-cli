@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2018",
     "module": "commonjs",
-    "lib": ["es5", "es6", "dom"],
+    "lib": ["es5", "es6", "dom", "dom.iterable"],
     "sourceMap": false,
     "outDir": "./dist",
     "strict": true,
@@ -11,6 +11,7 @@
     "baseUrl": "src",
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "jsx": "react"
   }
 }

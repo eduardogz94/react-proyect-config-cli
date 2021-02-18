@@ -5,11 +5,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.reactConfigCli = exports.getCommands = void 0;
 const commander_1 = __importDefault(require("commander"));
+// import initBuildCommand from "./build";
+// import initStartCommand from "./development";
 const getCommands = () => {
     return commander_1.default.commands;
 };
 exports.getCommands = getCommands;
 const reactConfigCli = (args) => {
+    console.log(args);
     if (!args.slice(2).length || !/[a-z]/.test(args.slice(2)[0])) {
         commander_1.default.outputHelp();
         return 0;
@@ -24,3 +27,5 @@ commander_1.default
     .version("0.0.1")
     .description("")
     .option("-p, --pepper");
+// program.addCommand(initBuildCommand());
+// program.addCommand(initStartCommand());
