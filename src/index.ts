@@ -1,14 +1,17 @@
 #!/usr/bin/env node
-import commander from "commander";
-import "reflect-metadata";
-import ReactConfigCommandLine from "./cli";
+import commander from 'commander';
+import 'reflect-metadata';
+import ReactConfigCommandLine from './cli';
+import BaseWebpackConfig from './configs/webpack/base/BaseWebpackConfig';
 
 const reactCli = new ReactConfigCommandLine(commander);
 
 reactCli.addInitialCliConfig({
-  description: "",
-  name: "react-proyect-config",
-  version: "0.0.1",
+  description: '',
+  name: 'react-proyect-config',
+  version: '0.0.1',
 });
 
 reactCli.startCli(process.argv);
+
+console.log(new BaseWebpackConfig());

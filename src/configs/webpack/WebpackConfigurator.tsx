@@ -1,5 +1,3 @@
-import { CleanWebpackPlugin } from 'clean-webpack-plugin';
-import CopyWebpackPlugin from 'copy-webpack-plugin';
 import fs from 'fs';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
@@ -7,50 +5,55 @@ import { resolve } from 'path';
 import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
 import webpack from 'webpack';
 import {
-  IHtmlOutputTemplate,
-  IHtmlPluginOptions,
+  HtmlOutputTemplate,
+  HtmlPluginOptions,
   IWebpackConfigurator,
+  WebpackAppEntrypoint,
+  WebpackBundlerMinimizer,
+  WebpackExtensionFiles,
+  WebpackExtractMiniCssPlugin,
+  WebpackExtractStyling,
+  WebpackHotReplacementPlugin,
+  WebpackLibEntrypoint,
+  WebpackLibOutput,
+  WebpackLoader,
+  WebpackLoaders,
+  WebpackMode,
+  WebpackModuleAliases,
+  WebpackModuleLoaderRules,
+  WebpackModuleRule,
+  WebpackNormalReplacementPlugin,
+  WebpackOutput,
+  WebpackOutputInitialProps,
+  WebpackSourcemapMode,
 } from './IWebpackConfigurator';
 
-import { DEV, DEVELOPMENT, PRO, PRO_DEV, PRODUCTION } from 'constants/envs';
-import { getFolderInCliPath, resolveWebpackPathFile } from 'utils/paths';
+import { DEV, DEVELOPMENT, PRO, PRO_DEV, PRODUCTION } from '../../constants/envs';
+import { getFolderInCliPath, getWebpackPathFile } from '../../utils/paths';
+
+import { WEBPACK_ENTRYPOINT_MODULES, WEBPACK_UTILITIES } from './constants';
 
 import {
-  WEBPACK_ALIASES,
-  WEBPACK_ENTRYPOINT_MODULES,
-  WEBPACK_FILE_ALLOWED_EXTENSIONS,
   WEBPACK_LOADERS,
   WEBPACK_LOADERS_REGEXP,
   WEBPACK_LOADERS_RULES,
-  WEBPACK_LOADERS_UTILITIES,
-} from './webpack.constants';
+} from './constants/loaders';
 
-const {
-  BABEL,
-  CSS,
-  EXTRACT_CSS,
-  EXTRACT_SCSS,
-  FONTS,
-  GRAPHQL,
-  JPG_OR_PNG,
-  MODULES,
-  SASS,
-  SVG,
-  TS,
-  URL,
-} = WEBPACK_LOADERS_UTILITIES;
+const { EXTRACT_CSS, EXTRACT_SCSS, JPG_OR_PNG, SVG, URL } = WEBPACK_UTILITIES.type;
+import { NODE_MODULES, SOURCE } from '../../constants/paths';
 
 export default class WebpackConfigurator implements IWebpackConfigurator {
-  public publicPath: string;
-  public buildVariables = getFolderInCliPath('constants/buildVariables');
+  protected publicPath: string;
+  protected buildVariables: string;
 
   constructor() {
     this.publicPath = '/';
+    this.buildVariables = getFolderInCliPath('constants/buildVariables');
   }
 
-  public setMode = (mode = DEVELOPMENT) => ({ mode });
+  public setMode = (mode: string = DEVELOPMENT): WebpackMode => ({ mode });
 
-  public setNormalReplacementPlugin = (appTarget: any) => {
+  public setNormalReplacementPlugin = (): WebpackNormalReplacementPlugin => {
     return {
       plugins: [
         new webpack.NormalModuleReplacementPlugin(/(.*)/, resource => {
@@ -59,7 +62,7 @@ export default class WebpackConfigurator implements IWebpackConfigurator {
             const extension = splittedResource.slice(-1)[0];
             const path = splittedResource.slice(0, splittedResource.length - 1).join('.');
             try {
-              const filePath = `${path}.${appTarget}.${extension}`;
+              const filePath = `${path}.${extension}`;
               fs.statSync(filePath);
               resource.resource = resource.resource.replace(resource.userRequest, filePath);
             } catch (error) {
@@ -73,7 +76,7 @@ export default class WebpackConfigurator implements IWebpackConfigurator {
     };
   };
 
-  public setBundleMinimizer = () => ({
+  public setBundleMinimizer = (): WebpackBundlerMinimizer => ({
     optimization: {
       minimizer: [
         new UglifyJsPlugin({
@@ -90,7 +93,7 @@ export default class WebpackConfigurator implements IWebpackConfigurator {
     },
   });
 
-  public setAppEntrypoint = (app: any) => ({
+  public setAppEntrypoint = (app: string): WebpackAppEntrypoint => ({
     entry: [...WEBPACK_ENTRYPOINT_MODULES, app],
   });
 
@@ -117,11 +120,11 @@ export default class WebpackConfigurator implements IWebpackConfigurator {
     };
   };
 
-  public setSourcemapMode = (mode = DEVELOPMENT) => ({
+  public setSourcemapMode = (mode = DEVELOPMENT): WebpackSourcemapMode => ({
     devtool: mode === PRODUCTION ? 'source-map' : 'cheap-module-eval-source-map',
   });
 
-  public setOutputInitialProps = (pathPrefix: string) => {
+  public setOutputInitialProps = (pathPrefix: string): WebpackOutputInitialProps => {
     return {
       chunkFilename: pathPrefix + '/static/js/[name].[hash].chunk.js',
       // Point sourcemap entries to original disk location (format as URL on Windows)
@@ -133,16 +136,16 @@ export default class WebpackConfigurator implements IWebpackConfigurator {
     };
   };
 
-  public setOutput = (mode: string, pathPrefix: string) => {
+  public setOutput = (mode: string, pathPrefix: string): WebpackOutput => {
     return {
       output: this.setOutputInitialProps(pathPrefix),
       plugins: [this.getOuputHtmlPlugin(mode)],
     };
   };
 
-  public createOutputHtmlOptions = (mode: string, pathPrefix?: string): IHtmlPluginOptions => {
+  public createOutputHtmlOptions = (mode: string, pathPrefix?: string): HtmlPluginOptions => {
     const OUTPUT_HTML_PLUGINS = {
-      [DEV]: { favicon: resolveWebpackPathFile('favicon.ico') },
+      [DEV]: { favicon: getWebpackPathFile('favicon.ico') },
       [PRO]: {},
       [PRO_DEV]: {
         filename: pathPrefix + '/index.html',
@@ -154,28 +157,30 @@ export default class WebpackConfigurator implements IWebpackConfigurator {
 
   public getOuputHtmlPlugin = (mode: string, pathPrefix?: string): HtmlWebpackPlugin => {
     const options = this.createOutputHtmlOptions(mode, pathPrefix);
+    const template = this.setOutputTemplateHtml();
+
     return new HtmlWebpackPlugin({
       ...options,
-      ...this.setOutputTemplateHtml(),
+      ...template,
     });
   };
 
-  public setOutputTemplateHtml = (mode: string = DEV): IHtmlOutputTemplate => {
-    if (mode === DEV) return { template: resolveWebpackPathFile('index-dev.html') };
+  public setOutputTemplateHtml = (mode: string = DEV): HtmlOutputTemplate => {
+    if (mode === DEV) return { template: getWebpackPathFile('index-dev.html') };
 
     return {
-      template: resolveWebpackPathFile('index.html'),
+      template: getWebpackPathFile('index.html'),
       templateParameters: {
         configPath: null,
       },
     };
   };
 
-  public setLibEntry = (path: any) => ({
+  public setLibEntrypoint = (path: RegExp): WebpackLibEntrypoint => ({
     entry: path,
   });
 
-  public setLibOutput = (path: any, filename: any) => {
+  public setLibOutput = (path: RegExp, filename: string): WebpackLibOutput => {
     return {
       output: {
         filename,
@@ -186,15 +191,17 @@ export default class WebpackConfigurator implements IWebpackConfigurator {
     };
   };
 
-  public addModuleRulesIntoLoader = (rules: object[]) => {
-    return {
-      module: {
-        rules,
-      },
-    };
-  };
+  public addModuleRulesIntoLoader = (rules: object[] = []): WebpackModuleLoaderRules => ({
+    module: {
+      rules,
+    },
+  });
 
-  public createRuleObjectForModule = (include: any, exclude: any, rest: any) => {
+  public createRuleObjectForModule = (
+    include: string[],
+    exclude: RegExp,
+    rest: object
+  ): WebpackModuleRule => {
     return {
       exclude,
       include,
@@ -202,7 +209,7 @@ export default class WebpackConfigurator implements IWebpackConfigurator {
     };
   };
 
-  public addMiniCssExtractPluginToModule = () => {
+  public addMiniCssExtractPluginToModule = (): WebpackExtractMiniCssPlugin => {
     return {
       plugins: [
         new MiniCssExtractPlugin({
@@ -213,63 +220,47 @@ export default class WebpackConfigurator implements IWebpackConfigurator {
     };
   };
 
-  public loadJSX = ({ include, exclude }: any) => {
-    const JSXRules = WEBPACK_LOADERS_RULES[BABEL];
-    const JSXRulesObject = this.createRuleObjectForModule(include, exclude, JSXRules);
-    return this.addModuleRulesIntoLoader([JSXRulesObject]);
-  };
-
-  public loadTSX = ({ include, exclude }: any) => {
-    const TSXRules = WEBPACK_LOADERS_RULES[TS];
-    const TSXRulesObject = this.createRuleObjectForModule(include, exclude, TSXRules);
-    return this.addModuleRulesIntoLoader([TSXRulesObject]);
-  };
-
-  // To use Sass we need to add the "sass-loader" and a configuration file
-  // called "postcss.config.js" with the plugins we are going to use.
-  public loadCSS = ({ include, exclude }: any) => {
-    const CSSRules = WEBPACK_LOADERS_RULES[CSS];
-    const CSSRulesObject = this.createRuleObjectForModule(include, exclude, CSSRules);
-    return this.addModuleRulesIntoLoader([CSSRulesObject]);
-  };
-
-  public loadSCSS = ({ include, exclude }: any) => {
-    const SASSRules = WEBPACK_LOADERS_RULES[SASS];
-    const SASSRulesObject = this.createRuleObjectForModule(include, exclude, SASSRules);
-    return this.addModuleRulesIntoLoader([SASSRulesObject]);
-  };
-
-  public extractCSS = ({ include, exclude }: any) => {
-    const extractCSSRules = WEBPACK_LOADERS_RULES[EXTRACT_CSS];
-    const extractCSSRulesObject = this.createRuleObjectForModule(include, exclude, extractCSSRules);
-    return {
-      ...this.addModuleRulesIntoLoader([extractCSSRulesObject]),
-      ...this.addMiniCssExtractPluginToModule(),
-    };
-  };
-
-  public extractSCSS = ({ include, exclude }: any) => {
-    const extractSCSSRules = WEBPACK_LOADERS_RULES[EXTRACT_SCSS];
-    const extractSCSSRulesObject = this.createRuleObjectForModule(
-      include,
-      exclude,
-      extractSCSSRules
+  public loadWebpackLoaders = ({
+    includeFiles,
+    excludeFiles,
+    loaders,
+  }: WebpackLoaders): WebpackModuleLoaderRules => {
+    const loadedLoaders = loaders.map((loader: string) =>
+      this.createRuleObjectForModule(includeFiles, excludeFiles, WEBPACK_LOADERS_RULES[loader])
     );
+
+    return this.addModuleRulesIntoLoader(loadedLoaders);
+  };
+
+  public loadWebpackLoader = ({
+    includeFiles,
+    excludeFiles,
+    loader,
+  }: WebpackLoader): WebpackModuleLoaderRules => {
+    const loaderRulesObject = this.createRuleObjectForModule(
+      includeFiles,
+      excludeFiles,
+      WEBPACK_LOADERS_RULES[loader]
+    );
+    return this.addModuleRulesIntoLoader([loaderRulesObject]);
+  };
+
+  public extractCssOrScss = ({
+    includeFiles,
+    excludeFiles,
+    loader = EXTRACT_CSS || EXTRACT_SCSS,
+  }: WebpackLoader): WebpackExtractStyling => {
     return {
-      ...this.addModuleRulesIntoLoader([extractSCSSRulesObject]),
+      ...this.loadWebpackLoader({
+        excludeFiles,
+        includeFiles,
+        loader,
+      }),
       ...this.addMiniCssExtractPluginToModule(),
     };
   };
 
-  public loadGraphQL = ({ include, exclude }: any) => {
-    const GRAPHQLRules = WEBPACK_LOADERS_RULES[GRAPHQL];
-    const modulesRules = WEBPACK_LOADERS_RULES[MODULES];
-    const GRAPHQLRulesObject = this.createRuleObjectForModule(include, exclude, GRAPHQLRules);
-    const modulesRulesObject = this.createRuleObjectForModule(include, exclude, modulesRules);
-    return this.addModuleRulesIntoLoader([GRAPHQLRulesObject, modulesRulesObject]);
-  };
-
-  public loadImages = ({ include, exclude, options }: any) => {
+  public loadImagesLoader = (include: string[], options: object, exclude: RegExp = /./) => {
     const jpgOrPngRulesObject = this.createRuleObjectForModule(include, exclude, {
       test: WEBPACK_LOADERS_REGEXP[JPG_OR_PNG],
       use: [
@@ -285,26 +276,20 @@ export default class WebpackConfigurator implements IWebpackConfigurator {
     return this.addModuleRulesIntoLoader([jpgOrPngRulesObject, svgRulesObject]);
   };
 
-  public loadFonts = ({ include, exclude }: any) => {
-    const fontsRules = WEBPACK_LOADERS_RULES[FONTS];
-    const fontsRulesObject = this.createRuleObjectForModule(include, exclude, fontsRules);
-    return this.addModuleRulesIntoLoader([fontsRulesObject]);
-  };
-
-  public setHotReloadReplacement = () => ({
+  public setHotReloadReplacement = (): WebpackHotReplacementPlugin => ({
     plugins: [new webpack.HotModuleReplacementPlugin()],
   });
 
-  public setExtensionFiles = () => ({
+  public setExtensionFiles = (extensions: string[]): WebpackExtensionFiles => ({
     resolve: {
-      extensions: WEBPACK_FILE_ALLOWED_EXTENSIONS,
+      extensions,
     },
   });
 
-  public setModulesAlises = () => ({
+  public setModulesAlises = (alias: object): WebpackModuleAliases => ({
     resolve: {
-      alias: WEBPACK_ALIASES,
-      modules: [resolve(__dirname, '..', '..', 'node_modules'), 'node_modules', 'src'],
+      alias,
+      modules: [resolve(__dirname, '..', '..', NODE_MODULES), NODE_MODULES, SOURCE],
     },
   });
 
@@ -313,52 +298,4 @@ export default class WebpackConfigurator implements IWebpackConfigurator {
       plugins: [...plugins],
     };
   };
-
-  //   public createCopyWebpackPlugin = (from: any, to: any) => {
-  //     return new CopyWebpackPlugin([{ from, to }]);
-  //   };
-
-  //   public getAssets = () => ({
-  //     plugins: [
-  //       new CopyWebpackPlugin([
-  //         {
-  //           from: resolve('node_modules', 'dist', 'assets'),
-  //           to: resolve('dist', 'assets'),
-  //         },
-  //       ]),
-  //     ],
-  //   });
-
-  //   public getTypes = () => ({
-  //     plugins: [
-  //       new CopyWebpackPlugin([
-  //         {
-  //           from: resolve('src', 'index.d.ts'),
-  //           to: resolve('dist', 'index.d.ts'),
-  //         },
-  //       ]),
-  //     ],
-  //   });
-
-  //   public cleanDist = () => ({
-  //     plugins: [
-  //       new CleanWebpackPlugin({
-  //         cleanBeforeEveryBuildPatterns: [resolve('dist')],
-  //         root: process.cwd(),
-  //       }),
-  //     ],
-  //   });
-
-  //   public addBuildEnvironmentVariables = (config: any) => {
-  //     const buildVariablesObject = this.buildVariables.reduce(
-  //       (lv: any, cv: { key: any; getWebpackValue: (arg0: any) => any }) => ({
-  //         ...lv,
-  //         [cv.key]: JSON.stringify(cv.getWebpackValue(config)),
-  //       }),
-  //       {}
-  //     );
-  //     return {
-  //       plugins: [new webpack.DefinePlugin(buildVariablesObject)],
-  //     };
-  //   };
 }

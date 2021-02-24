@@ -1,33 +1,38 @@
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import { getFolderInCliPath } from 'utils/paths';
+import { getFolderInCliPath } from '../../../utils/paths';
+import { WEBPACK_UTILITIES } from '../constants';
 
-const BABEL: string = 'babel';
-const CSS: string = 'css';
-const FILE: string = 'file';
-const GRAPHQL: string = 'graphql';
-const MINICSS: string = 'miniCss';
-const SASS: string = 'sass';
-const STYLE: string = 'style';
-const SVG: string = 'svg-inline';
-const TS: string = 'ts';
-const URL: string = 'url';
-const FONTS: string = 'fonts';
-const MODULES: string = 'modules';
-const JPG_OR_PNG: string = 'jpgOrPng';
-const EXTRACT_CSS: string = 'extractCSS';
-const EXTRACT_SCSS: string = 'extractSCSS';
+const {
+  BABEL,
+  CSS,
+  EXTRACT_CSS,
+  EXTRACT_SCSS,
+  FONTS,
+  GRAPHQL,
+  JPG_OR_PNG,
+  MODULES,
+  SASS,
+  SVG,
+  TS,
+  URL,
+  FILE,
+  MINICSS,
+  STYLE,
+} = WEBPACK_UTILITIES.type;
 
-const CSS_REGEX: RegExp = /\.css$/;
-const SCSS_REGEX: RegExp = /\.scss$/;
-const TS_OR_TSX_REGEX: RegExp = /\.(ts|tsx)?$/;
-const JPG_OR_PNG_REGEX: RegExp = /\.(jpg|png)$/;
-const SVG_REGEX: RegExp = /\.svg$/;
-const GRAPHQL_REGEX: RegExp = /\.graphql$/;
-const MODULES_REGEX: RegExp = /\.mjs$/;
-const FONTS_REGEX: RegExp = /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/;
-const JSX_REGEX: RegExp = /\.jsx?$/;
+const {
+  CSS_REGEX,
+  FONTS_REGEX,
+  GRAPHQL_REGEX,
+  JPG_OR_PNG_REGEX,
+  JSX_REGEX,
+  MODULES_REGEX,
+  SCSS_REGEX,
+  SVG_REGEX,
+  TS_OR_TSX_REGEX,
+} = WEBPACK_UTILITIES.regexp;
 
-export const WEBPACK_LOADERS = {
+export let WEBPACK_LOADERS = {
   [BABEL]: 'babel-loader',
   [CSS]: 'css-loader',
   [FILE]: 'file-loader',
@@ -51,24 +56,6 @@ export const WEBPACK_LOADERS_REGEXP = {
   [SVG]: SVG_REGEX,
   [TS]: TS_OR_TSX_REGEX,
   [JPG_OR_PNG]: JPG_OR_PNG_REGEX,
-};
-
-export const WEBPACK_LOADERS_UTILITIES = {
-  BABEL,
-  CSS,
-  EXTRACT_CSS,
-  EXTRACT_SCSS,
-  FILE,
-  FONTS,
-  GRAPHQL,
-  JPG_OR_PNG,
-  MINICSS,
-  MODULES,
-  SASS,
-  STYLE,
-  SVG,
-  TS,
-  URL,
 };
 
 const JSX_RULES = {
@@ -153,13 +140,3 @@ export const WEBPACK_LOADERS_RULES = {
   [MODULES]: { ...MODULES_RULES },
   [SVG]: { ...SVG_RULES },
 };
-
-export const WEBPACK_FILE_ALLOWED_EXTENSIONS = ['.ts', '.tsx', '.js', '.jsx', '.scss'];
-
-export const WEBPACK_ALIASES = {};
-
-export const WEBPACK_ENTRYPOINT_MODULES = [
-  'react-hot-loader/patch', // Hot reload support
-  '@babel/polyfill/noConflict', // Babel polyfills
-  'whatwg-fetch', // Fetch polyfills
-];

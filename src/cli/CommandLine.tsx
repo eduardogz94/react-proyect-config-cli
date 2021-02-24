@@ -1,6 +1,6 @@
-import { inject } from "inversify";
-import { TYPES } from "../constants/types";
-import { ICliCommand, ICLiCommandOption, ICliConfig } from "./ICommandLine";
+import { inject } from 'inversify';
+import { TYPES } from '../constants/types';
+import { ICliCommand, ICLiCommandOption, ICliConfig } from './ICommandLine';
 
 export default class ReactConfigCommandLine implements ICliConfig {
   public name: string;
@@ -38,15 +38,10 @@ export default class ReactConfigCommandLine implements ICliConfig {
     this.mapOptionsIntoCommand(options, commandObject);
   };
 
-  private mapOptionsIntoCommand = (
-    options: ICLiCommandOption[],
-    command: any
-  ) => {
-    if (options.length > 2) {
-      options.forEach((option: ICLiCommandOption) =>
-        this.addOptionToCommand(option, command)
-      );
-    } else this.addOptionToCommand(options[0], command);
+  private mapOptionsIntoCommand = (options: ICLiCommandOption[], command: any) => {
+    options.length > 2
+      ? options.forEach((option: ICLiCommandOption) => this.addOptionToCommand(option, command))
+      : this.addOptionToCommand(options[0], command);
 
     return command;
   };

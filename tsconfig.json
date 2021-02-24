@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2018",
     "module": "commonjs",
-    "lib": ["es5", "es6", "dom", "dom.iterable"],
+    "lib": ["ES2015", "ES2016", "dom", "dom.iterable", "es2015.iterable"],
     "sourceMap": false,
     "outDir": "./dist",
     "strict": true,
