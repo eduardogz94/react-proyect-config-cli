@@ -4,7 +4,7 @@ MAX_PARAMS=300
 # If there are JavaScript files staged we launch eslint.
 files=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '.js?$'  | grep -E '.ts?$' | grep -v '.test')
 if [ "$files" = "" ]; then
-  echo "There are no .js file staged"
+  echo "There are no .js or .ts file staged"
 else
   echo "Running ES linter..."
   if [ "${#files[@]}" -lt "$MAX_PARAMS" ]; then
