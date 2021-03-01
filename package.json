@@ -11,7 +11,8 @@
     "lint": "npx eslint --cache . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "npm run lint --fix",
     "lint:staged": "pretty-quick --staged && lint-staged",
-    "prettier:check": "prettier --config .prettierrc --check \"src/**/*.{ts,js}\""
+    "prettier:check": "prettier --config .prettierrc --check \"src/**/*.{ts,js}\"",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",

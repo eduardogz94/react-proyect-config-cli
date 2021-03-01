@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# EMAIL=$(git config --get user.email)
+#     grep -qE '[a-zA-Z]{3}[0-9]{3}-[0-9]+' $1
+
+#     if [[ $? != 0 ]]; then
+#         echo -e "No issue specified in commit message:\n$(cat $1)\nCommit rejected"
+#         exit 1
+#     fi
+# fi
+
+exit 0

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# First we install the config repo to have the original common files.
+cd app
+
+# Then we launch the scripts to copy common files and hooks.
+yarn postinstall
+
+# Then we launch the test and exit if they fail.
+npm test || exit 1;
