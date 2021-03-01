@@ -1,9 +1,6 @@
 #!/bin/bash
 
 # EMAIL=$(git config --get user.email)
-
-# if [[ $EMAIL != *"@gruposantander.com"* && $EMAIL != *"@paradigmadigital.com"* && $EMAIL != *"@openbank.com"* ]]; then
-
 #     grep -qE '[a-zA-Z]{3}[0-9]{3}-[0-9]+' $1
 
 #     if [[ $? != 0 ]]; then

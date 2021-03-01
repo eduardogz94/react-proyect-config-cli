@@ -2,7 +2,6 @@
 
 # First we install the config repo to have the original common files.
 cd app
-yarn install @openbank/mb-ui-config
 
 # Then we launch the scripts to copy common files and hooks.
 yarn postinstall
