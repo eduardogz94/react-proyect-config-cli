@@ -2,16 +2,31 @@
 import commander from 'commander';
 import 'reflect-metadata';
 import ReactConfigCommandLine from './cli';
-import BaseWebpackConfig from './configs/webpack/base/BaseWebpackConfig';
+import BaseWebpackProductionConfig from './configs/webpack/base/BaseWebpackProductionConfig';
 
 const reactCli = new ReactConfigCommandLine(commander);
 
-reactCli.addInitialCliConfig({
+const initialConfig = {
   description: '',
   name: 'react-proyect-config',
   version: '0.0.1',
-});
+};
+
+reactCli.addInitialCliConfig(initialConfig);
 
 reactCli.startCli(process.argv);
 
-console.log(new BaseWebpackConfig());
+// const webpackProductionConfigurator = new BaseWebpackProductionConfig();
+// const {
+//   createBaseWebpackConfiguration,
+//   createBaseWebpackProductionConfiguration,
+// } = webpackProductionConfigurator;
+
+// console.log(webpackProductionConfigurator.defaultConfiguration)
+
+// webpackProductionConfigurator.defaultConfiguration = [
+//   ...createBaseWebpackConfiguration(),
+//   ...createBaseWebpackProductionConfiguration(),
+// ];
+
+// console.log(webpackProductionConfigurator.defaultConfiguration)

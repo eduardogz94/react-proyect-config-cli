@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 const BABEL = 'babel';
 const CSS = 'css';
 const FILE: string = 'file';

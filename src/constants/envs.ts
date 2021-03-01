@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 export const DEVELOPMENT: string = 'development';
 export const PRODUCTION: string = 'production';
 

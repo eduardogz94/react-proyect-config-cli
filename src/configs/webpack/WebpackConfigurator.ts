@@ -16,8 +16,8 @@ import {
   WebpackHotReplacementPlugin,
   WebpackLibEntrypoint,
   WebpackLibOutput,
-  WebpackLoader,
-  WebpackLoaders,
+  WebpackLoaderParams,
+  WebpackLoadersParams,
   WebpackMode,
   WebpackModuleAliases,
   WebpackModuleLoaderRules,
@@ -43,13 +43,8 @@ const { EXTRACT_CSS, EXTRACT_SCSS, JPG_OR_PNG, SVG, URL } = WEBPACK_UTILITIES.ty
 import { NODE_MODULES, SOURCE } from '../../constants/paths';
 
 export default class WebpackConfigurator implements IWebpackConfigurator {
-  protected publicPath: string;
-  protected buildVariables: string;
-
-  constructor() {
-    this.publicPath = '/';
-    this.buildVariables = getFolderInCliPath('constants/buildVariables');
-  }
+  protected publicPath = '/';
+  protected buildVariables: string = getFolderInCliPath('constants/buildVariables');
 
   public setMode = (mode: string = DEVELOPMENT): WebpackMode => ({ mode });
 
@@ -97,7 +92,7 @@ export default class WebpackConfigurator implements IWebpackConfigurator {
     entry: [...WEBPACK_ENTRYPOINT_MODULES, app],
   });
 
-  public setAppMultiEntrypoint = (app: any, dev: any) => {
+  public setAppMultiEntrypoint = (app: string, dev: string): { entry: Record<string, unknown> } => {
     const variants = [
       {
         file: app,
@@ -191,7 +186,9 @@ export default class WebpackConfigurator implements IWebpackConfigurator {
     };
   };
 
-  public addModuleRulesIntoLoader = (rules: object[] = []): WebpackModuleLoaderRules => ({
+  public addModuleRulesIntoLoader = (
+    rules: Record<string, unknown>[]
+  ): WebpackModuleLoaderRules => ({
     module: {
       rules,
     },
@@ -200,7 +197,7 @@ export default class WebpackConfigurator implements IWebpackConfigurator {
   public createRuleObjectForModule = (
     include: string[],
     exclude: RegExp,
-    rest: object
+    rest: Record<string, unknown>
   ): WebpackModuleRule => {
     return {
       exclude,
@@ -220,11 +217,8 @@ export default class WebpackConfigurator implements IWebpackConfigurator {
     };
   };
 
-  public loadWebpackLoaders = ({
-    includeFiles,
-    excludeFiles,
-    loaders,
-  }: WebpackLoaders): WebpackModuleLoaderRules => {
+  public loadWebpackLoaders = (loadersParams: WebpackLoadersParams): WebpackModuleLoaderRules => {
+    const { excludeFiles, includeFiles, loaders } = loadersParams;
     const loadedLoaders = loaders.map((loader: string) =>
       this.createRuleObjectForModule(includeFiles, excludeFiles, WEBPACK_LOADERS_RULES[loader])
     );
@@ -232,11 +226,8 @@ export default class WebpackConfigurator implements IWebpackConfigurator {
     return this.addModuleRulesIntoLoader(loadedLoaders);
   };
 
-  public loadWebpackLoader = ({
-    includeFiles,
-    excludeFiles,
-    loader,
-  }: WebpackLoader): WebpackModuleLoaderRules => {
+  public loadWebpackLoader = (loaderParams: WebpackLoaderParams): WebpackModuleLoaderRules => {
+    const { excludeFiles, includeFiles, loader } = loaderParams;
     const loaderRulesObject = this.createRuleObjectForModule(
       includeFiles,
       excludeFiles,
@@ -245,11 +236,8 @@ export default class WebpackConfigurator implements IWebpackConfigurator {
     return this.addModuleRulesIntoLoader([loaderRulesObject]);
   };
 
-  public extractCssOrScss = ({
-    includeFiles,
-    excludeFiles,
-    loader = EXTRACT_CSS || EXTRACT_SCSS,
-  }: WebpackLoader): WebpackExtractStyling => {
+  public extractCssOrScss = (loaderParams: WebpackLoaderParams): WebpackExtractStyling => {
+    const { excludeFiles, includeFiles, loader = EXTRACT_CSS || EXTRACT_SCSS } = loaderParams;
     return {
       ...this.loadWebpackLoader({
         excludeFiles,
@@ -260,7 +248,11 @@ export default class WebpackConfigurator implements IWebpackConfigurator {
     };
   };
 
-  public loadImagesLoader = (include: string[], options: object, exclude: RegExp = /./) => {
+  public loadImagesLoader = (
+    include: string[],
+    options: Record<string, unknown>,
+    exclude = /./
+  ): WebpackModuleLoaderRules => {
     const jpgOrPngRulesObject = this.createRuleObjectForModule(include, exclude, {
       test: WEBPACK_LOADERS_REGEXP[JPG_OR_PNG],
       use: [
@@ -286,16 +278,16 @@ export default class WebpackConfigurator implements IWebpackConfigurator {
     },
   });
 
-  public setModulesAlises = (alias: object): WebpackModuleAliases => ({
+  public setModulesAlises = (alias: Record<string, unknown>): WebpackModuleAliases => ({
     resolve: {
       alias,
       modules: [resolve(__dirname, '..', '..', NODE_MODULES), NODE_MODULES, SOURCE],
     },
   });
 
-  public createPlugin = (plugins: any) => {
+  public createPlugin = (plugins: []): { plugins: [] } => {
     return {
-      plugins: [...plugins],
+      plugins,
     };
   };
 }

@@ -32,7 +32,7 @@ const {
   TS_OR_TSX_REGEX,
 } = WEBPACK_UTILITIES.regexp;
 
-export let WEBPACK_LOADERS = {
+export const WEBPACK_LOADERS = {
   [BABEL]: 'babel-loader',
   [CSS]: 'css-loader',
   [FILE]: 'file-loader',

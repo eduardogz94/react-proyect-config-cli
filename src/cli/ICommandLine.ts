@@ -4,15 +4,15 @@ export interface ICliConfig {
   name: string;
 }
 
+export interface ICLiCommandOption {
+  flag: string;
+  description: string;
+  default: string | boolean | undefined;
+}
+
 export interface ICliCommand {
   options: ICLiCommandOption[];
   name: string;
-  description?: string;
-  action?: () => void;
-}
-
-export interface ICLiCommandOption {
-  shortcut: string;
   description: string;
-  default: any;
+  action?: () => void;
 }
