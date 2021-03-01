@@ -6,7 +6,7 @@ import { WEBPACK_ALIASES, WEBPACK_FILE_ALLOWED_EXTENSIONS, WEBPACK_UTILITIES } f
 const { BABEL, CSS, FONTS, SASS, TS, GRAPHQL, MODULES } = WEBPACK_UTILITIES.type;
 
 class BaseWebpackConfig extends WebpackConfigurator {
-  public defaultConfiguration: any[] = [];
+  public defaultConfiguration: Record<string, unknown>[] = [];
   protected srcPath: string = resolve(NODE_MODULES, DIST, ASSETS);
   protected assetsPath: string = resolve(DIST, ASSETS);
   protected nodeModulesAssetsPath: string = resolve(SOURCE);
@@ -15,8 +15,8 @@ class BaseWebpackConfig extends WebpackConfigurator {
     super();
   }
 
-  public createBaseWebpackConfiguration = (): any[] => {
-    const baseConfiguration: any[] = [
+  public createBaseWebpackConfiguration = (): Record<string, unknown>[] => {
+    const baseConfiguration: Record<string, unknown>[] = [
       this.loadWebpackLoader({
         excludeFiles: NODE_MODULES_REG_EXP,
         includeFiles: [this.srcPath],

@@ -11,8 +11,8 @@ class BaseWebpackProductionConfig extends BaseWebpackConfig {
     super();
   }
 
-  public createBaseWebpackProductionConfiguration = (): any[] => {
-    const baseConfiguration: any[] = [
+  public createBaseWebpackProductionConfiguration = (): Record<string, unknown>[] => {
+    const baseConfiguration: Record<string, unknown>[] = [
       this.setMode(DEVELOPMENT),
       this.setAppEntrypoint(resolve(SOURCE, 'index.jsx')),
       this.setSourcemapMode(PRODUCTION),
