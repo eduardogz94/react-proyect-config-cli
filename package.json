@@ -9,7 +9,8 @@
     "clean": "rimraf dist",
     "dev": "ts-node src/index.ts",
     "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
-    "lint:fix": "npx eslint . --ext .js,.jsx,.ts,.tsx --fix"
+    "lint:fix": "npx eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "prettier:check": "prettier --config .prettierrc --check \"src/**/*.{ts,js}\""
   },
   "repository": {
     "type": "git",
@@ -82,7 +83,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "npm run prettier:check && lint-staged"
     }
   }
 }

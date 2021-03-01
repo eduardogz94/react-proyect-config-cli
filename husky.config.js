@@ -1,5 +1,5 @@
 module.exports = {
   hooks: {
-    'pre-commit': 'lint-staged && npm run clean && npm run build',
+    'pre-commit': 'npm run lint && lint-staged && npm run clean && npm run build',
   },
 };
