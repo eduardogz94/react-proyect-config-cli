@@ -8,8 +8,9 @@
     "build": "npm run clean && tsc",
     "clean": "rimraf dist",
     "dev": "ts-node src/index.ts",
-    "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
-    "lint:fix": "npx eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "lint": "npx eslint --cache . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "npm run lint --fix",
+    "lint:staged": "pretty-quick --staged && lint-staged",
     "prettier:check": "prettier --config .prettierrc --check \"src/**/*.{ts,js}\""
   },
   "repository": {
@@ -76,14 +77,11 @@
     "typescript-module-alias": "^1.0.2"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx, ts, tsx}": [
-      "eslint . --fix",
-      "git add"
-    ]
+    "*.{ts,js}": "npm run lint:fix"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run prettier:check && lint-staged"
+      "pre-commit": "npm run lint:staged"
     }
   }
 }
