@@ -2,7 +2,7 @@
 MAX_PARAMS=300
 
 # If there are JavaScript files staged we launch eslint.
-files=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '.js?$' | grep -v '.test')
+files=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '.js?$'  | grep -E '.ts?$' | grep -v '.test')
 if [ "$files" = "" ]; then
   echo "There are no .js file staged"
 else
@@ -49,28 +49,6 @@ fi
 #     echo "ES and Sass linter validation passed, commiting..."
 #     exit 0
 # fi
-
-# Check flow js typing errors
-appPath="$(pwd)/app"
-WHITE='\033[1;37m'
-CYAN='\033[0;36m'
-RED='\033[0;31m'
-
-echo "${CYAN}Running Flow"
-echo "${CYAN}Restarting Flow server"
-echo "${WHITE}"
-app/node_modules/.bin/flow stop "$appPath"
-echo "${CYAN}Checking files"
-echo "${WHITE}"
-app/node_modules/.bin/flow "$appPath" --show-all-errors --color=always
-
-RETVAL_FLOW=$?
-
-if [ $RETVAL_FLOW -ne 0 ]; then
-    echo "${RED}Can't commit: Some of your file isn't passing FLOW type checking validation. See above error's output"
-    echo "${WHITE}"
-    exit 1
-fi
 
 # exit 1
 exit 0
