@@ -1,7 +1,8 @@
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import { getFolderInCliPath } from '../../../utils/paths';
-import { WEBPACK_UTILITIES } from '../constants';
+import { getFolderInCliPath } from 'utils/paths';
+import { WEBPACK_UTILITIES } from 'configs/webpack/constants';
 
+// TODO Crear typings correctos y exportar as const
 const {
   BABEL,
   CSS,
@@ -20,6 +21,7 @@ const {
   STYLE,
 } = WEBPACK_UTILITIES.type;
 
+// TODO Crear typings correctos y exportar as const
 const {
   CSS_REGEX,
   FONTS_REGEX,
@@ -32,6 +34,7 @@ const {
   TS_OR_TSX_REGEX,
 } = WEBPACK_UTILITIES.regexp;
 
+// TODO Crear typings correctos y exportar as const
 export const WEBPACK_LOADERS = {
   [BABEL]: 'babel-loader',
   [CSS]: 'css-loader',
@@ -45,6 +48,7 @@ export const WEBPACK_LOADERS = {
   [URL]: 'url-loader',
 };
 
+// TODO Crear typings correctos y exportar as const
 export const WEBPACK_LOADERS_REGEXP = {
   [BABEL]: JSX_REGEX,
   [CSS]: CSS_REGEX,
@@ -58,6 +62,8 @@ export const WEBPACK_LOADERS_REGEXP = {
   [JPG_OR_PNG]: JPG_OR_PNG_REGEX,
 };
 
+// ------------------------ Mejorar en todas estas constantes ------------------------
+// TODO Crear typings correctos y exportar as const
 const JSX_RULES = {
   loader: WEBPACK_LOADERS[BABEL],
   options: {
@@ -140,3 +146,5 @@ export const WEBPACK_LOADERS_RULES = {
   [MODULES]: { ...MODULES_RULES },
   [SVG]: { ...SVG_RULES },
 };
+
+// ------------------------ |Mejorar en todas estas constantes -----------------------

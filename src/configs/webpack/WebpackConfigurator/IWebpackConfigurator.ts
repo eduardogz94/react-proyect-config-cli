@@ -76,18 +76,21 @@ export type WebpackLibOutput = {
   };
 };
 
+// TODO Corregir typings mejorando Record
 export type WebpackModuleLoaderRules = {
   module: {
     rules: Record<string, unknown>[];
   };
 };
 
+// TODO Corregir typings mejorando Record
 export type WebpackModuleRule = { exclude: RegExp; include: string[]; rest?: Record<string, unknown> };
 
 export type WebpackExtractMiniCssPlugin = {
   plugins: MiniCssExtractPlugin[];
 };
 
+// TODO Corregir typings mejorando Record
 export type WebpackExtractStyling = {
   plugins: MiniCssExtractPlugin[];
   module: {
@@ -101,6 +104,7 @@ export type WebpackExtensionFiles = {
   };
 };
 
+// TODO Corregir typings mejorando Record
 export type WebpackModuleAliases = {
   resolve: {
     alias: Record<string, unknown>;
@@ -112,6 +116,7 @@ export type WebpackPlugins = {
   plugins: []
 }
 
+// TODO Corregir typings mejorando Record
 export type WebpackDefaultConfiguration = Array<
   WebpackMode | WebpackAppEntrypoint | WebpackSourcemapMode | WebpackModuleLoaderRules
 >;
@@ -140,6 +145,7 @@ export interface IWebpackConfigurator {
   setLibEntrypoint(path: RegExp): WebpackLibEntrypoint;
   // eslint-disable-next-line no-unused-vars
   setLibOutput(path: RegExp, filename: string): WebpackLibOutput;
+  // TODO Corregir typings mejorando Record
   // eslint-disable-next-line no-unused-vars
   addModuleRulesIntoLoader(rules?: Record<string, unknown>[]): WebpackModuleLoaderRules;
   // eslint-disable-next-line no-unused-vars

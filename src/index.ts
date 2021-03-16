@@ -1,32 +1,26 @@
 #!/usr/bin/env node
 import commander from 'commander';
 import 'reflect-metadata';
-import ReactConfigCommandLine from './cli';
-import BaseWebpackProductionConfig from './configs/webpack/base/BaseWebpackProductionConfig';
+import ReactConfigCommandLine from 'cli';
+import { initBuildCommand } from 'cli/build';
+// import BaseWebpackConfig from './configs/webpack/base/BaseWebpackConfig';
 
 const reactCli = new ReactConfigCommandLine(commander);
 
-const initialConfig = {
+const initialInfo = {
   description: '',
   name: 'react-proyect-config',
   version: '0.0.1',
 };
 
-reactCli.addInitialCliConfig(initialConfig);
+reactCli.addInitialCliConfig(initialInfo);
 
+reactCli.addCommand(initBuildCommand());
 reactCli.startCli(process.argv);
+// const baseWebpackConfigurator = new BaseWebpackConfig();
+// const { useDevWebpackConfiguration, useProdWebpackConfiguration } = baseWebpackConfigurator;
 
-// const webpackProductionConfigurator = new BaseWebpackProductionConfig();
-// const {
-//   createBaseWebpackConfiguration,
-//   createBaseWebpackProductionConfiguration,
-// } = webpackProductionConfigurator;
+// useProdWebpackConfiguration();
 
-// console.log(webpackProductionConfigurator.defaultConfiguration)
-
-// webpackProductionConfigurator.defaultConfiguration = [
-//   ...createBaseWebpackConfiguration(),
-//   ...createBaseWebpackProductionConfiguration(),
-// ];
-
-// console.log(webpackProductionConfigurator.defaultConfiguration)
+// // eslint-disable-next-line no-console
+// console.log(baseWebpackConfigurator.defaultConfiguration);

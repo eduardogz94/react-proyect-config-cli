@@ -1,0 +1,37 @@
+#!/bin/sh
+MAX_PARAMS=300
+
+# If there are JavaScript files staged we launch eslint.
+files=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '.js?$' | grep -v '.test')
+if [ "$files" = "" ]; then
+  echo "There are no .js or .ts file staged"
+else
+  echo "Running ES linter..."
+  if [ "${#files[@]}" -lt "$MAX_PARAMS" ]; then
+    echo ${files} | xargs node_modules/.bin/eslint --color
+  else
+    node_modules/.bin/eslint --color
+  fi
+fi
+
+# If there are Typescript files staged we launch eslint.
+files=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '.ts?$' | grep -v '.test')
+if [ "$files" = "" ]; then
+  echo "There are no .js or .ts file staged"
+else
+  echo "Running ES linter..."
+  if [ "${#files[@]}" -lt "$MAX_PARAMS" ]; then
+    echo ${files} | xargs node_modules/.bin/eslint --color
+  else
+    node_modules/.bin/eslint --color
+  fi
+fi
+
+RETVAL_ESLINT=$?
+
+if [ $RETVAL_ESLINT -ne 0 ]; then
+  echo "Can't commit: Some of your file isn't passing ES linter validation."
+  exit 1
+fi
+
+exit 0

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
+// TODO Crear typings correctos y crear sus respectivos simbolos
 const BABEL = 'babel';
 const CSS = 'css';
 const FILE: string = 'file';
@@ -25,6 +26,7 @@ const MODULES_REGEX: RegExp = /\.mjs$/;
 const FONTS_REGEX: RegExp = /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/;
 const JSX_REGEX: RegExp = /\.jsx?$/;
 
+// TODO Crear typings correctos y crear sus respectivos simbolos
 export const WEBPACK_FILE_ALLOWED_EXTENSIONS = ['.ts', '.tsx', '.js', '.jsx', '.scss'];
 
 export const WEBPACK_ALIASES = {};
@@ -35,6 +37,7 @@ export const WEBPACK_ENTRYPOINT_MODULES = [
   'whatwg-fetch', // Fetch polyfills
 ];
 
+// TODO Crear typings correctos y exportar as const
 export const WEBPACK_UTILITIES = {
   regexp: {
     CSS_REGEX,

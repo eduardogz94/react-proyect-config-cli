@@ -28,19 +28,19 @@ import {
   WebpackSourcemapMode,
 } from './IWebpackConfigurator';
 
-import { DEV, DEVELOPMENT, PRO, PRO_DEV, PRODUCTION } from '../../constants/envs';
-import { getFolderInCliPath, getWebpackPathFile } from '../../utils/paths';
+import { DEV, DEVELOPMENT, PRO, PRO_DEV, PRODUCTION } from 'constants/envs';
+import { getFolderInCliPath, getWebpackPathFile } from 'utils/paths';
 
-import { WEBPACK_ENTRYPOINT_MODULES, WEBPACK_UTILITIES } from './constants';
+import { WEBPACK_ENTRYPOINT_MODULES, WEBPACK_UTILITIES } from 'configs/webpack/constants';
 
 import {
   WEBPACK_LOADERS,
   WEBPACK_LOADERS_REGEXP,
   WEBPACK_LOADERS_RULES,
-} from './constants/loaders';
+} from '../constants/loaders';
 
 const { EXTRACT_CSS, EXTRACT_SCSS, JPG_OR_PNG, SVG, URL } = WEBPACK_UTILITIES.type;
-import { NODE_MODULES, SOURCE } from '../../constants/paths';
+import { NODE_MODULES, SOURCE } from '../../../constants/paths';
 
 export default class WebpackConfigurator implements IWebpackConfigurator {
   protected publicPath = '/';

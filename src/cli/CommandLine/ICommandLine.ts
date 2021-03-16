@@ -1,3 +1,5 @@
+export type ICliCommandAction = () => void | Promise<void>;
+
 export interface ICliConfig {
   description: string;
   version: string;
@@ -7,12 +9,12 @@ export interface ICliConfig {
 export interface ICLiCommandOption {
   flag: string;
   description: string;
-  default: string | boolean | undefined;
+  default?: string | boolean | undefined;
 }
 
 export interface ICliCommand {
   options: ICLiCommandOption[];
   name: string;
   description: string;
-  action?: () => void;
+  action: ICliCommandAction;
 }

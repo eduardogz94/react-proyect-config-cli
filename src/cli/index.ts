@@ -1,2 +1,2 @@
-import ReactConfigCommandLine from "./CommandLine";
+import ReactConfigCommandLine from "./CommandLine/CommandLine";
 export default ReactConfigCommandLine;
